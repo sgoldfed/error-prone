@@ -1,11 +1,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
-import com.google.inject.servlet.RequestScoped;
-
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
@@ -16,8 +11,7 @@ public class GuiceMoreThanOneInjectableConstructorNegativeCases {
    * Class has single non-injectable constructor.
    */
   public class TestClass1{
-    public TestClass1() {
-    }
+    public TestClass1() {}
   }
 
   /**
@@ -25,8 +19,7 @@ public class GuiceMoreThanOneInjectableConstructorNegativeCases {
    */
   public class TestClass2{
     @Inject
-    public TestClass2() {
-    }
+    public TestClass2() {}
   }
 
   /**
