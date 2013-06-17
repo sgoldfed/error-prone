@@ -54,7 +54,7 @@ public class GuiceMoreThanOneInjectableConstructor extends DescribingMatcher<Met
         }
       }
     }
-   return (numberOfInjectableConstructors > 1) ? true : false;
+   return (numberOfInjectableConstructors > 1);
   }
 
   @SuppressWarnings("unchecked")

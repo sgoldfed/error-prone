@@ -28,4 +28,14 @@ public class GuiceMoreThanOneScopeAnnotationOnClassNegativeCases {
    */
   @Singleton @SuppressWarnings("foo")
   public class TestClass4 {}
+  
+  /**
+   * Class has two annotations, one of which is a scoping annotation. Class
+   * also has a method with a scoping annotation.
+   */
+   @SuppressWarnings("foo")
+  public class TestClass5 {
+  @Singleton
+  public void foo(){}
+  }
 }
