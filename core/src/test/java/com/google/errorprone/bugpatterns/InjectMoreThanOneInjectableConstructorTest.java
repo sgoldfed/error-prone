@@ -10,27 +10,27 @@ import java.io.File;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class GuiceMoreThanOneInjectableConstructorTest {
+public class InjectMoreThanOneInjectableConstructorTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
     compilationHelper = new CompilationTestHelper(
-        new GuiceMoreThanOneInjectableConstructor.Scanner());
+        new InjectMoreThanOneInjectableConstructor.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
         new File(this.getClass().getResource(
-            "GuiceMoreThanOneInjectableConstructorPositiveCases.java").toURI()));
+            "InjectMoreThanOneInjectableConstructorPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
         new File(this.getClass().getResource(
-            "GuiceMoreThanOneInjectableConstructorNegativeCases.java").toURI()));
+            "InjectMoreThanOneInjectableConstructorNegativeCases.java").toURI()));
   }
 }
