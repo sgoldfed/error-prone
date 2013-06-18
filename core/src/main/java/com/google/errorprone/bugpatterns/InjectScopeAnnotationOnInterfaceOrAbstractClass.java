@@ -1,7 +1,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
-import static com.google.errorprone.BugPattern.MaturityLevel.MATURE;
+import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.sun.source.tree.Tree.Kind.INTERFACE;
@@ -27,7 +27,7 @@ import com.sun.source.tree.Tree;
 @BugPattern(name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
     summary = "Scope annotation on an interface or abstact class is not allowed",
     explanation = "Scoping annotations are not allowed on abstract types.", category = INJECT,
-    severity = ERROR, maturity = MATURE)
+    severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectScopeAnnotationOnInterfaceOrAbstractClass
     extends DescribingMatcher<AnnotationTree> {
 
