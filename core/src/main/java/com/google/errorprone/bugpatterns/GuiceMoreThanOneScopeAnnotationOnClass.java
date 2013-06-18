@@ -34,7 +34,6 @@ public class GuiceMoreThanOneScopeAnnotationOnClass extends DescribingMatcher<An
 
   /**
    * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice) or
-   *
    * @Scope(Javax).
    */
   @SuppressWarnings("unchecked")
