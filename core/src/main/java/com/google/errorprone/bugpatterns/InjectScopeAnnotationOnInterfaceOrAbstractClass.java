@@ -28,7 +28,8 @@ import com.sun.source.tree.Tree;
     summary = "Scope annotation on an interface or abstact class is not allowed",
     explanation = "Scoping annotations are not allowed on abstract types.", category = INJECT,
     severity = ERROR, maturity = MATURE)
-public class InjectScopeAnnotationOnInterfaceOrAbstractClass extends DescribingMatcher<AnnotationTree> {
+public class InjectScopeAnnotationOnInterfaceOrAbstractClass
+    extends DescribingMatcher<AnnotationTree> {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
