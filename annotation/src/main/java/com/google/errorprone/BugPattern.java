@@ -89,11 +89,7 @@ public @interface BugPattern {
     /**
      * One-off matchers that are not general errors.
      */
-    ONE_OFF,
-    /**
-     * JSR-330 errors not specific to GUICE
-     */
-    INJECT
+    ONE_OFF
   }
 
   /**
