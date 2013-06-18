@@ -8,7 +8,6 @@ import static com.sun.source.tree.Tree.Kind.INTERFACE;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.MaturityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.DescribingMatcher;
