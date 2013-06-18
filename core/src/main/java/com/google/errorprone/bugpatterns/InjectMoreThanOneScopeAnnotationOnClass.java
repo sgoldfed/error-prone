@@ -1,6 +1,6 @@
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.GUICE;
+import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
@@ -24,10 +24,12 @@ import com.sun.source.tree.ModifiersTree;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 
-@BugPattern(name = "GuiceMoreThanOneScopeAnnotationOnClass",
-    summary = "A class can be annotated with at most one scope annotation", explanation = "",
-    category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
-public class GuiceMoreThanOneScopeAnnotationOnClass extends DescribingMatcher<AnnotationTree> {
+@BugPattern(name = "InjectMoreThanOneScopeAnnotationOnClass",
+    summary = "A class can be annotated with at most one scope annotation", 
+    explanation = "Annotating a class with more than one scope annotation is "
+        + "invalid according to the JSR-330 specification. ", category = INJECT, severity = ERROR,
+    maturity = EXPERIMENTAL)
+public class InjectMoreThanOneScopeAnnotationOnClass extends DescribingMatcher<AnnotationTree> {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -67,7 +69,7 @@ public class GuiceMoreThanOneScopeAnnotationOnClass extends DescribingMatcher<An
 
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<AnnotationTree> annotationMatcher =
-        new GuiceMoreThanOneScopeAnnotationOnClass();
+        new InjectMoreThanOneScopeAnnotationOnClass();
 
     @Override
     public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {

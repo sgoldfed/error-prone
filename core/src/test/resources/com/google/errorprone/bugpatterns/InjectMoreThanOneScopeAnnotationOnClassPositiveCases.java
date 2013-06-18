@@ -6,7 +6,7 @@ import com.google.inject.servlet.SessionScoped;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
-public class GuiceMoreThanOneScopeAnnotationOnClassPositiveCases {
+public class MoreThanOneScopeAnnotationOnClassPositiveCases {
 
   /**
    * Class has two scope annotations

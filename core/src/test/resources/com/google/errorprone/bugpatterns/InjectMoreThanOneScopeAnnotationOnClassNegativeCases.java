@@ -1,11 +1,11 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.inject.Singleton;
-
+import com.google.inject.Provides;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
-public class GuiceMoreThanOneScopeAnnotationOnClassNegativeCases {
+public class InjectMoreThanOneScopeAnnotationOnClassNegativeCases {
 
   /**
    * Class has no annotation. 
@@ -35,7 +35,7 @@ public class GuiceMoreThanOneScopeAnnotationOnClassNegativeCases {
    */
    @SuppressWarnings("foo")
   public class TestClass5 {
-  @Singleton
+  @Singleton @Provides
   public void foo(){}
   }
 }

@@ -10,24 +10,24 @@ import java.io.File;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class GuiceMoreThanOneScopeAnnotationOnClassTest {
+public class InjectMoreThanOneScopeAnnotationOnClassTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(new GuiceMoreThanOneScopeAnnotationOnClass.Scanner());
+        new CompilationTestHelper(new InjectMoreThanOneScopeAnnotationOnClass.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
-        .getResource("GuiceMoreThanOneScopeAnnotationOnClassPositiveCases.java").toURI()));
+        .getResource("InjectMoreThanOneScopeAnnotationOnClassPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(new File(this.getClass()
-        .getResource("GuiceMoreThanOneScopeAnnotationOnClassNegativeCases.java").toURI()));
+        .getResource("InjectMoreThanOneScopeAnnotationOnClassNegativeCases.java").toURI()));
   }
 }
