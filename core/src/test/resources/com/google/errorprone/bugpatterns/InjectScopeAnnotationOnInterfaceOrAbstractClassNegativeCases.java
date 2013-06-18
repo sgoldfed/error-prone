@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
+public class InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
   /**
    * concrete class has no scoping annotation
    */

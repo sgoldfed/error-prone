@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
 
-public class ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
+public class InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
 
   /**
    * abstract class has scoping annotation

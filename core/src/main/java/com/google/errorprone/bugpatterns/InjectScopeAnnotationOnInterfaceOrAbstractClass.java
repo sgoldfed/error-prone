@@ -24,11 +24,11 @@ import com.sun.source.tree.Tree;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "ScopeAnnotationOnInterfaceOrAbstractClass",
-    summary = "Scope annotation on an interface or abstact class is not allowed", 
-    explanation = "Scoping annotations are not allowed on abstract types.",
-    category = INJECT, severity = ERROR, maturity = MATURE)
-public class ScopeAnnotationOnInterfaceOrAbstractClass extends DescribingMatcher<AnnotationTree> {
+@BugPattern(name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
+    summary = "Scope annotation on an interface or abstact class is not allowed",
+    explanation = "Scoping annotations are not allowed on abstract types.", category = INJECT,
+    severity = ERROR, maturity = MATURE)
+public class InjectScopeAnnotationOnInterfaceOrAbstractClass extends DescribingMatcher<AnnotationTree> {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -41,24 +41,14 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends DescribingMatcher
   private Matcher<AnnotationTree> scopeAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
       hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
-  private Matcher<ClassTree> interfaceMatcher = new Matcher<ClassTree>() {
+
+  private Matcher<ClassTree> interfaceAndAbstractClassMatcher = new Matcher<ClassTree>() {
     @Override
     public boolean matches(ClassTree classTree, VisitorState state) {
-      return classTree.getKind().equals(INTERFACE);
+      return classTree.getModifiers().getFlags().contains(ABSTRACT)
+          || classTree.getKind().equals(INTERFACE);
     }
   };
-  private Matcher<ClassTree> abstractClassMatcher = new Matcher<ClassTree>() {
-    @Override
-    public boolean matches(ClassTree classTree, VisitorState state) {
-      return classTree.getModifiers().getFlags().contains(ABSTRACT);
-    }
-  };
-
-  @SuppressWarnings("unchecked")
-  private Matcher<ClassTree> interfaceAndAbstractClassMatcher =
-      Matchers.<ClassTree>anyOf(interfaceMatcher, abstractClassMatcher);
-
-
 
   @Override
   @SuppressWarnings("unchecked")
@@ -77,7 +67,7 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends DescribingMatcher
 
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<AnnotationTree> annotationMatcher =
-        new ScopeAnnotationOnInterfaceOrAbstractClass();
+        new InjectScopeAnnotationOnInterfaceOrAbstractClass();
 
     @Override
     public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {

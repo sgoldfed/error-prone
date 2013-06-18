@@ -17,18 +17,20 @@ public class ScopeAnnotationOnInterfaceOrAbstractClassTest {
   @Before
   public void setUp() {
     compilationHelper =
-        new CompilationTestHelper(new ScopeAnnotationOnInterfaceOrAbstractClass.Scanner());
+        new CompilationTestHelper(new InjectScopeAnnotationOnInterfaceOrAbstractClass.Scanner());
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(new File(this.getClass()
-        .getResource("ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java").toURI()));
+        .getResource("InjectScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java")
+        .toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(new File(this.getClass()
-        .getResource("ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java").toURI()));
+        .getResource("InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java")
+        .toURI()));
   }
 }
