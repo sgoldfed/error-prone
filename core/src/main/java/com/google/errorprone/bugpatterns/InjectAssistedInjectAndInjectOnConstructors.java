@@ -21,14 +21,13 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-
-
+import com.sun.tools.javac.code.Symbol;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(name = "InjectAssistedInjectAndInjectOnConstructors",
-    summary = "@AssistedInject and @Inject cannot be used on cinstructors in the same class.",
+    summary = "@AssistedInject and @Inject cannot be used on constructors in the same class.",
     explanation = 
     "http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
@@ -67,13 +66,12 @@ public class InjectAssistedInjectAndInjectOnConstructors extends DescribingMatch
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
     Tree modified = state.getPath().getParentPath().getParentPath().getLeaf();
     if (ASTHelpers.getSymbol(modified).isConstructor()) {
-      ClassTree enclosingClass =
-          (ClassTree) state.getPath().getParentPath().getParentPath().getParentPath().getLeaf();
-      if (ASTHelpers.getSymbol(annotationTree)
-          .equals(state.getSymbolFromString(JAVAX_INJECT_ANNOTATION)) || ASTHelpers.getSymbol(
-          annotationTree).equals(state.getSymbolFromString(GUICE_INJECT_ANNOTATION))
-          || ASTHelpers.getSymbol(annotationTree)
-              .equals(state.getSymbolFromString(ASSISTED_INJECT_ANNOTATION))) {
+      Symbol annotationSymbol = ASTHelpers.getSymbol(annotationTree);
+      if (annotationSymbol.equals(state.getSymbolFromString(JAVAX_INJECT_ANNOTATION))
+          || annotationSymbol.equals(state.getSymbolFromString(GUICE_INJECT_ANNOTATION))
+          || annotationSymbol.equals(state.getSymbolFromString(ASSISTED_INJECT_ANNOTATION))) {
+        ClassTree enclosingClass =
+            (ClassTree) state.getPath().getParentPath().getParentPath().getParentPath().getLeaf();
         return constructorsWithInjectAndAssistedInjectMatcher.matches(enclosingClass, state);
       }
     }
