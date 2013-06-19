@@ -7,14 +7,11 @@ import org.junit.Test;
 
 import java.io.File;
 
-
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 public class InjectAssistedInjectAndInjectOnConstructorsTest {
-
-
-
+  
   private CompilationTestHelper compilationHelper;
 
   @Before

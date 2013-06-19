@@ -20,6 +20,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
     @javax.inject.Inject
     public TestClass2() {}
   }
+  
   /**
    * Class has a constructor with a @com.google.injectInject annotation.
    */
@@ -27,6 +28,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
     @com.google.inject.Inject
     public TestClass3() {}
   }
+  
   /**
    * Class has a constructor annotated with @AssistedInject
    */
@@ -34,6 +36,7 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
     @AssistedInject
     public TestClass4() {}
   }
+  
   /**
    * Class has a constructor with a @AssistedInject annotation as well as an injectable field
    */
@@ -44,5 +47,4 @@ public class InjectAssistedInjectAndInjectOnConstructorsNegativeCases {
     @AssistedInject
     public TestClass5() {}
   }
-
 }
