@@ -42,12 +42,13 @@ import java.lang.annotation.Target;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(name = "InjectInvalidTargetingOnScopingAnnotation",
-    summary = "The @Target of a scoping annotation must be set to METHOD and/or TYPE",
+    summary = "The target of a scoping annotation must be set to METHOD and/or TYPE.",
     explanation = "", category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher<ClassTree> {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
+  private static final String TARGET_ANNOTATION = "java.lang.annotation.Target";
 
   /**
    * Matches classes that are annotated with @Scope or @ScopeAnnotation.
@@ -82,16 +83,23 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
 
   @Override
   public Description describe(ClassTree classTree, VisitorState state) {
-    AnnotationTree scope = null;
-    for (AnnotationTree annotationTree : classTree.getModifiers().getAnnotations()) {
-      if (ASTHelpers.getSymbol(annotationTree)
-          .equals(state.getSymbolFromString(JAVAX_SCOPE_ANNOTATION)) || ASTHelpers.getSymbol(
-          annotationTree).equals(state.getSymbolFromString(GUICE_SCOPE_ANNOTATION))) {
-        scope = annotationTree;
-      }
-
+    Target target = JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Target.class);
+    if (target == null) {
+      return new Description(classTree, getDiagnosticMessage(), new SuggestedFix().addImport(
+          "java.lang.annotation.Target").addStaticImport("java.lang.annotation.ElementType.TYPE")
+          .addStaticImport("java.lang.annotation.ElementType.METHOD")
+          .prefixWith(classTree, "@Target({TYPE, METHOD})\n"));
     }
-    return new Description(classTree, getDiagnosticMessage(), new SuggestedFix().delete(scope));
+    AnnotationTree targetNode = null;
+    for (AnnotationTree annotation : classTree.getModifiers().getAnnotations()) {
+      if (ASTHelpers.getSymbol(annotation).equals(state.getSymbolFromString(TARGET_ANNOTATION))) {
+        targetNode = annotation;
+      }
+    }
+    return new Description(targetNode, getDiagnosticMessage(), new SuggestedFix().addImport(
+        "java.lang.annotation.Target").addStaticImport("java.lang.annotation.ElementType.TYPE")
+        .addStaticImport("java.lang.annotation.ElementType.METHOD")
+        .replace(targetNode, "@Target({TYPE, METHOD})"));
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

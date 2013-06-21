@@ -33,36 +33,34 @@ public class InjectInvalidTargetingOnScopingAnnotationPositiveCases {
    * A scoping annotation with no specified target.
    */
   @Scope 
-  //BUG: Suggestion includes "remove"
+  //BUG: Suggestion includes "@Target({TYPE, METHOD})"
   public @interface TestAnnotation1 {
   }
 
   /**
    * @Target is given an empty array
    */
+  //BUG: Suggestion includes "@Target({TYPE, METHOD})"
   @Target({})
   @Scope 
-  //BUG: Suggestion includes "remove"
   public @interface TestAnnotation2 {
   }
 
   /**
    * A scoping annotation with taeget TYPE, METHOD, and (illegal) PARAMETER.
    */
+  //BUG: Suggestion includes "@Target({TYPE, METHOD})"
   @Target({TYPE, METHOD, PARAMETER})
   @Scope 
-  
-  //BUG: Suggestion includes "remove"
   public @interface TestAnnotation3 {
   }
 
   /**
    * A scoping annotation target set to PARAMETER.
    */
+  //BUG: Suggestion includes "@Target({TYPE, METHOD})"
   @Target(PARAMETER)
   @Scope 
-  
-  //BUG: Suggestion includes "remove"
   public @interface TestAnnotation4 {
   }
 }
