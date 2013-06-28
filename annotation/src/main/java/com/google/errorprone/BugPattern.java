@@ -91,7 +91,7 @@ public @interface BugPattern {
      */
     ONE_OFF,
     /**
-     * JSR-330 errors not specific to GUICE
+     * JSR-330 errors not specific to Guice.
      */
     INJECT
   }
