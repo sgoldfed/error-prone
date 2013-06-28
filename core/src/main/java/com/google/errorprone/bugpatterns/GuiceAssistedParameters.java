@@ -31,13 +31,14 @@ import com.google.inject.assistedinject.Assisted;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.model.JavacElements;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(name = "GuiceAssistedParameters", summary =
-    "A constrcutor cannot have two @Assisted parameters of the same type unless they are"
+    "A constructor cannot have two @Assisted parameters of the same type unless they are "
     + "disambiguated with named @Assisted annotations. ",
     explanation = "See http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html",
     category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
@@ -48,7 +49,8 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
   private Matcher<VariableTree> constructorParameterMatcher = new Matcher<VariableTree>() {
     @Override
     public boolean matches(VariableTree t, VisitorState state) {
-      return ASTHelpers.getSymbol(state.getPath().getParentPath().getLeaf()).isConstructor();
+      Symbol modified = ASTHelpers.getSymbol(state.getPath().getParentPath().getLeaf());
+      return modified != null && modified.isConstructor();
     }
   };
 
@@ -56,20 +58,19 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
   @SuppressWarnings("unchecked")
   public final boolean matches(VariableTree variableTree, VisitorState state) {
     if (constructorParameterMatcher.matches(variableTree, state)) {
-      Assisted thisParametersAssistedAnnotation =
+      Assisted thisParamsAssisted =
           JavacElements.getAnnotation(ASTHelpers.getSymbol(variableTree), Assisted.class);
-      if (thisParametersAssistedAnnotation != null) {
+      if (thisParamsAssisted != null) {
         MethodTree enclosingMethod = (MethodTree) state.getPath().getParentPath().getLeaf();
         // count the number of parameters of this type and value. One is expected since we
         // will be iterating through all parameters including the one we're matching.
         int numIdentical = 0;
         for (VariableTree parameter : enclosingMethod.getParameters()) {
           if (Matchers.<VariableTree>isSameType(variableTree).matches(parameter, state)) {
-            Assisted otherParametersAssistedAnnotation =
+            Assisted otherParamsAssisted =
                 JavacElements.getAnnotation(ASTHelpers.getSymbol(parameter), Assisted.class);
-            if (otherParametersAssistedAnnotation
-                != null && thisParametersAssistedAnnotation.value()
-                .equals(otherParametersAssistedAnnotation.value())) {
+            if (otherParamsAssisted != null
+                && thisParamsAssisted.value().equals(otherParamsAssisted.value())) {
               numIdentical++;
             }
           }
@@ -85,17 +86,13 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
   @Override
   public Description describe(VariableTree variableTree, VisitorState state) {
     // find the @Assisted annotation to put the error on
-    AnnotationTree assistedAnnotation = null;
     for (AnnotationTree annotation : variableTree.getModifiers().getAnnotations()) {
       if (ASTHelpers.getSymbol(annotation).equals(state.getSymbolFromString(ASSISTED_ANNOTATION))) {
-        assistedAnnotation = annotation;
+        return new Description(
+            annotation, getDiagnosticMessage(), new SuggestedFix().delete(annotation));
       }
     }
-    if (assistedAnnotation == null) {
-      throw new IllegalStateException("Expected to find @Assisted on this parameter");
-    }
-    return new Description(
-        assistedAnnotation, getDiagnosticMessage(), new SuggestedFix().delete(assistedAnnotation));
+    throw new IllegalStateException("Expected to find @Assisted on this parameter");
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {

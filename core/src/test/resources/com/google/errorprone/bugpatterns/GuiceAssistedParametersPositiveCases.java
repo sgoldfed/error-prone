@@ -32,40 +32,40 @@ public class GuiceAssistedParametersPositiveCases {
    */
   public class TestClass1 {
     @Inject
-    public TestClass1(int n, 
-                      //BUG: Suggestion includes "remove"  
+    public TestClass1(int n,
+                      //BUG: Suggestion includes "remove"
+                      @Assisted
+                      String x,
+                      //BUG: Suggestion includes "remove"
                       @Assisted 
-                      String x, 
-                      //BUG: Suggestion includes "remove"  
-                      @Assisted 
-                      String y, int z){}
+                      String y, int z) {}
   }
-  
+
   /**
    * Class has constructor with two @Assisted parameters of the same type and same value.
    */
-  public class TestClass2{
+  public class TestClass2 {
     @Inject
-    public TestClass2(int n, 
-                      //BUG: Suggestion includes "remove"  
-                      @Assisted("foo")
-                      int x, 
-                      //BUG: Suggestion includes "remove"  
+    public TestClass2(int n,
+                      //BUG: Suggestion includes "remove"
                       @Assisted("foo") 
-                      int y, String z){}
+                      int x,
+                      //BUG: Suggestion includes "remove"
+                      @Assisted("foo") 
+                      int y, String z) {}
   }
-  
+
   /**
    * Class has constructor with two @Assisted parameters of the same parameterized type.
    */
-  public class TestClass3{
+  public class TestClass3 {
     @Inject
-    public TestClass3(int n, 
-                      //BUG: Suggestion includes "remove"  
+    public TestClass3(int n,
+                      //BUG: Suggestion includes "remove"
                       @Assisted("foo")
-                      List<String> x, 
-                      //BUG: Suggestion includes "remove"  
-                      @Assisted("foo") 
-                      List<String> y, String z){}
+                      List<String> x,
+                      //BUG: Suggestion includes "remove"
+                      @Assisted("foo")
+                      List<String> y, String z) {}
   }
 }
