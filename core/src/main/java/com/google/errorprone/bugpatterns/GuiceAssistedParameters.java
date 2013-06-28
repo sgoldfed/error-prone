@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -37,8 +36,11 @@ import com.sun.tools.javac.model.JavacElements;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "GuiceAssistedParameters", summary = "", explanation = "", category = GUICE,
-    severity = ERROR, maturity = EXPERIMENTAL)
+@BugPattern(name = "GuiceAssistedParameters", summary =
+    "A constrcutor cannot have two @Assisted parameters of the same type unless they are"
+    + "disambiguated with named @Assisted annotations. ",
+    explanation = "See http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/FactoryModuleBuilder.html",
+    category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
 public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
 
   private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
@@ -59,7 +61,7 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
       if (thisParametersAssistedAnnotation != null) {
         MethodTree enclosingMethod = (MethodTree) state.getPath().getParentPath().getLeaf();
         // count the number of parameters of this type and value. One is expected since we
-        // will be iterating through all parameters including the one we're matching. 
+        // will be iterating through all parameters including the one we're matching.
         int numIdentical = 0;
         for (VariableTree parameter : enclosingMethod.getParameters()) {
           if (Matchers.<VariableTree>isSameType(variableTree).matches(parameter, state)) {
@@ -82,7 +84,7 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
 
   @Override
   public Description describe(VariableTree variableTree, VisitorState state) {
-    // find the @Assisted annotation to put the error on 
+    // find the @Assisted annotation to put the error on
     AnnotationTree assistedAnnotation = null;
     for (AnnotationTree annotation : variableTree.getModifiers().getAnnotations()) {
       if (ASTHelpers.getSymbol(annotation).equals(state.getSymbolFromString(ASSISTED_ANNOTATION))) {
