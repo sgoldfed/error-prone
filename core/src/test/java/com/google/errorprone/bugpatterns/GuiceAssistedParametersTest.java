@@ -29,7 +29,6 @@ import java.io.File;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @RunWith(JUnit4.class)
-
 public class GuiceAssistedParametersTest {
 
   private CompilationTestHelper compilationHelper;
