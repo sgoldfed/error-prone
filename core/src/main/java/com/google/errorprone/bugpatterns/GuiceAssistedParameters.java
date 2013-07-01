@@ -26,13 +26,15 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.inject.assistedinject.Assisted;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Attribute.Compound;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.model.JavacElements;
+
+import javax.lang.model.element.TypeElement;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -46,37 +48,58 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
 
   private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
 
-  private Matcher<VariableTree> constructorParameterMatcher = new Matcher<VariableTree>() {
+  private Matcher<VariableTree> constructorAssistedParameterMatcher = new Matcher<VariableTree>() {
     @Override
     public boolean matches(VariableTree t, VisitorState state) {
       Symbol modified = ASTHelpers.getSymbol(state.getPath().getParentPath().getLeaf());
-      return modified != null && modified.isConstructor();
+      return modified != null && modified.isConstructor()
+          && Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION).matches(t, state);
     }
   };
 
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(VariableTree variableTree, VisitorState state) {
-    if (constructorParameterMatcher.matches(variableTree, state)) {
-      Assisted thisParamsAssisted =
-          JavacElements.getAnnotation(ASTHelpers.getSymbol(variableTree), Assisted.class);
-      if (thisParamsAssisted != null) {
-        MethodTree enclosingMethod = (MethodTree) state.getPath().getParentPath().getLeaf();
-        // count the number of parameters of this type and value. One is expected since we
-        // will be iterating through all parameters including the one we're matching.
-        int numIdentical = 0;
-        for (VariableTree parameter : enclosingMethod.getParameters()) {
-          if (Matchers.<VariableTree>isSameType(variableTree).matches(parameter, state)) {
-            Assisted otherParamsAssisted =
-                JavacElements.getAnnotation(ASTHelpers.getSymbol(parameter), Assisted.class);
-            if (otherParamsAssisted != null
-                && thisParamsAssisted.value().equals(otherParamsAssisted.value())) {
-              numIdentical++;
+    if (constructorAssistedParameterMatcher.matches(variableTree, state)) {
+      Compound thisParamsAssisted = null;
+      for (Compound c : ASTHelpers.getSymbol(variableTree).getAnnotationMirrors()) {
+        if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
+            .contentEquals(ASSISTED_ANNOTATION)) {
+          thisParamsAssisted = c;
+        }
+      }
+      MethodTree enclosingMethod = (MethodTree) state.getPath().getParentPath().getLeaf();
+      // count the number of parameters of this type and value. One is expected since we
+      // will be iterating through all parameters including the one we're matching.
+      int numIdentical = 0;
+      for (VariableTree parameter : enclosingMethod.getParameters()) {
+        if (Matchers.<VariableTree>isSameType(variableTree).matches(parameter, state)) {
+          Compound otherParamsAssisted = null;
+          for (Compound c : ASTHelpers.getSymbol(parameter).getAnnotationMirrors()) {
+            if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
+                .contentEquals(ASSISTED_ANNOTATION)) {
+              otherParamsAssisted = c;
             }
           }
-        }
-        if (numIdentical > 1) {
-          return true;
+          if (otherParamsAssisted != null) {
+            if (thisParamsAssisted.getElementValues().isEmpty()
+                && otherParamsAssisted.getElementValues().isEmpty()) {
+              //both have unnamed @Assisted annotations
+              numIdentical++;
+            }
+            //if value is specified, check that they are equal
+            //also, there can only be one value which is why I didn't check for equality
+            //in both directions
+            for (MethodSymbol m : thisParamsAssisted.getElementValues().keySet())
+              if (otherParamsAssisted.getElementValues().get(m).getValue()
+                  .equals(thisParamsAssisted.getElementValues().get(m).getValue())) {
+                numIdentical++;
+              }
+          }
+
+          if (numIdentical > 1) {
+            return true;
+          }
         }
       }
     }
