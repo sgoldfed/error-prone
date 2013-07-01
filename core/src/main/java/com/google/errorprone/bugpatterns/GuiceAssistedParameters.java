@@ -96,7 +96,6 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
                 numIdentical++;
               }
           }
-
           if (numIdentical > 1) {
             return true;
           }
