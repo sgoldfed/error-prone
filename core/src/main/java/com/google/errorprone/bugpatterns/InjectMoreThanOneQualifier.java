@@ -42,11 +42,11 @@ import com.sun.source.tree.ModifiersTree;
 public class InjectMoreThanOneQualifier extends DescribingMatcher<AnnotationTree> {
 
 
-  private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
-  private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
+  private final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
+  private final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
 
   @SuppressWarnings("unchecked")
-  Matcher<AnnotationTree> qualifierAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
+  private final Matcher<AnnotationTree> qualifierAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
       hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
 
   @Override
