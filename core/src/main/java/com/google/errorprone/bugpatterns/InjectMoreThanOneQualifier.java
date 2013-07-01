@@ -32,6 +32,8 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 
+import java.util.List;
+
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
@@ -42,25 +44,29 @@ import com.sun.source.tree.ModifiersTree;
 public class InjectMoreThanOneQualifier extends DescribingMatcher<AnnotationTree> {
 
 
-  private final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
-  private final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
+  private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
+  private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
 
   @SuppressWarnings("unchecked")
-  private final Matcher<AnnotationTree> qualifierAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
-      hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
+  private static final Matcher<AnnotationTree> QUALIFIER_ANNOTATION_MATCHER =
+      Matchers.<AnnotationTree>anyOf(
+          hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
 
   @Override
   public boolean matches(AnnotationTree annotationTree, VisitorState state) {
     int numberOfQualifiers = 0;
-    if (qualifierAnnotationMatcher.matches(annotationTree, state)) {
-      for (AnnotationTree t :
-          ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getAnnotations()) {
-        if (qualifierAnnotationMatcher.matches(t, state)) {
+    if (QUALIFIER_ANNOTATION_MATCHER.matches(annotationTree, state)) {
+      for (AnnotationTree t : getSiblingAnnotations(state)) {
+        if (QUALIFIER_ANNOTATION_MATCHER.matches(t, state)) {
           numberOfQualifiers++;
         }
       }
     }
     return (numberOfQualifiers > 1);
+  }
+
+  private List<? extends AnnotationTree> getSiblingAnnotations(VisitorState state) {
+    return ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getAnnotations();
   }
 
   @Override
