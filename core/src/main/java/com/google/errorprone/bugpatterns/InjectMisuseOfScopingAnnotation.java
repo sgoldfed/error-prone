@@ -55,13 +55,14 @@ public class InjectMisuseOfScopingAnnotation extends DescribingMatcher<Annotatio
    * @Scope(javax).
    */
   @SuppressWarnings("unchecked")
-  private final Matcher<AnnotationTree> scopeAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
-      hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
+  private static final Matcher<AnnotationTree> SCOPE_ANNOTATION_MATCHER =
+      Matchers.<AnnotationTree>anyOf(
+          hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    if (scopeAnnotationMatcher.matches(annotationTree, state)) {
+    if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)) {
       Tree modified = state.getPath().getParentPath().getParentPath().getLeaf();
       if (!modified.getKind().equals(CLASS)) {
         if (modified.getKind().equals(METHOD)) {
