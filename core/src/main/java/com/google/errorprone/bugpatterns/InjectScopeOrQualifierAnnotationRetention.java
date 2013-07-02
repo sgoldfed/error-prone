@@ -1,17 +1,15 @@
 /*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.google.errorprone.bugpatterns;
@@ -59,29 +57,22 @@ public class InjectScopeOrQualifierAnnotationRetention extends DescribingMatcher
    * Matches classes that are annotated with @Scope or @ScopeAnnotation.
    */
   @SuppressWarnings("unchecked")
-  private Matcher<ClassTree> scopeAnnotationMatcher = Matchers.<ClassTree>anyOf(
-      hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
-
-  /**
-   * Matches classes that are annotated with @Qualifier or @BindingAnnotation
-   */
-  @SuppressWarnings("unchecked")
-  Matcher<ClassTree> qualifierAnnotationMatcher = Matchers.<ClassTree>anyOf(
+  private static final Matcher<ClassTree> SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER = Matchers.<
+      ClassTree>anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION),
       hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
 
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(ClassTree classTree, VisitorState state) {
     if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0) {
-      if (scopeAnnotationMatcher.matches(classTree, state)
-          || qualifierAnnotationMatcher.matches(classTree, state)) {
+      if (SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
         Retention retention =
             JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Retention.class);
         if (retention != null) {
-          // matches if retention is not runtime
           return (!retention.value().equals(RUNTIME));
+
         }
-        return true;
+        return true;//Default retention is CLASS, not RUNTIME, so return true if retention == null
       }
     }
     return false;
