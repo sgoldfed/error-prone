@@ -44,7 +44,7 @@ import java.lang.annotation.Target;
 @BugPattern(name = "InjectInvalidTargetingOnScopingAnnotation",
     summary = "The target of a scoping annotation must be set to METHOD and/or TYPE.",
     explanation = "Scoping annotations are only appropriate for provision and therefore are only " +
-    		"appropriate on @Provides methods and classes that will be just-in-time provided.",
+    		"appropriate on @Provides methods and classes that will be  provided just-in-time.",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher<ClassTree> {
 
@@ -75,7 +75,7 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
           }
         }
       }
-      return !hasExclusivelyTypeAndOrMethodTargeting; // true if no target set and for @Target({}) 
+      return !hasExclusivelyTypeAndOrMethodTargeting; // true for no target set and for @Target({}) 
     }
     return false;
   }
@@ -84,8 +84,9 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
   public Description describe(ClassTree classTree, VisitorState state) {
     Target target = JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Target.class);
     if (target == null) {
-      return new Description(classTree, getDiagnosticMessage(), new SuggestedFix().addImport(
-          "java.lang.annotation.Target").addStaticImport("java.lang.annotation.ElementType.TYPE")
+      return new Description(classTree, getDiagnosticMessage(), new SuggestedFix()
+          .addImport("java.lang.annotation.Target")
+          .addStaticImport("java.lang.annotation.ElementType.TYPE")
           .addStaticImport("java.lang.annotation.ElementType.METHOD")
           .prefixWith(classTree, "@Target({TYPE, METHOD})\n"));
     }
@@ -95,8 +96,9 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
         targetNode = annotation;
       }
     }
-    return new Description(targetNode, getDiagnosticMessage(), new SuggestedFix().addImport(
-        "java.lang.annotation.Target").addStaticImport("java.lang.annotation.ElementType.TYPE")
+    return new Description(targetNode, getDiagnosticMessage(), new SuggestedFix()
+        .addImport("java.lang.annotation.Target")
+        .addStaticImport("java.lang.annotation.ElementType.TYPE")
         .addStaticImport("java.lang.annotation.ElementType.METHOD")
         .replace(targetNode, "@Target({TYPE, METHOD})"));
   }
