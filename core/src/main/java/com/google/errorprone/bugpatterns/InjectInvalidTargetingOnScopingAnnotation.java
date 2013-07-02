@@ -43,7 +43,9 @@ import java.lang.annotation.Target;
  */
 @BugPattern(name = "InjectInvalidTargetingOnScopingAnnotation",
     summary = "The target of a scoping annotation must be set to METHOD and/or TYPE.",
-    explanation = "", category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
+    explanation = "Scoping annotations are only appropriate for provision and therefore are only " +
+    		"appropriate on @Provides methods and classes that will be just-in-time provided.",
+    category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher<ClassTree> {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
@@ -54,29 +56,26 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
    * Matches classes that are annotated with @Scope or @ScopeAnnotation.
    */
   @SuppressWarnings("unchecked")
-  private Matcher<ClassTree> scopeAnnotationMatcher = Matchers.<ClassTree>anyOf(
+  private static final Matcher<ClassTree> SCOPE_ANNOTATION_MATCHER = Matchers.<ClassTree>anyOf(
       hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(ClassTree classTree, VisitorState state) {
     if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0
-        && scopeAnnotationMatcher.matches(classTree, state)) {
+        && SCOPE_ANNOTATION_MATCHER.matches(classTree, state)) {
       Target target = JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Target.class);
-      boolean hasTypeOrMethodTargeting = false;
+      boolean hasExclusivelyTypeAndOrMethodTargeting = false;
       if (target != null) {
         for (ElementType elementType : target.value()) {
           if (elementType != METHOD && elementType != TYPE) {
             return true;
           } else if (elementType == METHOD || elementType == TYPE) {
-            hasTypeOrMethodTargeting = true;
+            hasExclusivelyTypeAndOrMethodTargeting = true;
           }
         }
-        // this will return true if the target of a scoping annotation is specified as @Target({})
-        return !hasTypeOrMethodTargeting;
       }
-      // no target specified
-      return true;
+      return !hasExclusivelyTypeAndOrMethodTargeting; // true if no target set and for @Target({}) 
     }
     return false;
   }
