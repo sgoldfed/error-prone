@@ -16,16 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
+@RunWith(JUnit4.class)
 public class InjectMoreThanOneQualifierTest {
 
   private CompilationTestHelper compilationHelper;
@@ -37,13 +40,13 @@ public class InjectMoreThanOneQualifierTest {
 
   @Test
   public void testPositiveCase() throws Exception {
-    compilationHelper.assertCompileFailsWithMessages(new File(
-        this.getClass().getResource("InjectMoreThanOneQualifierPositiveCases.java").toURI()));
+    compilationHelper.assertCompileFailsWithMessages(
+        fileFromResource(getClass(), "InjectMoreThanOneQualifierPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
-    compilationHelper.assertCompileSucceeds(new File(
-        this.getClass().getResource("InjectMoreThanOneQualifierNegativeCases.java").toURI()));
+    compilationHelper.assertCompileSucceeds(
+        fileFromResource(getClass(), "InjectMoreThanOneQualifierNegativeCases.java"));
   }
 }

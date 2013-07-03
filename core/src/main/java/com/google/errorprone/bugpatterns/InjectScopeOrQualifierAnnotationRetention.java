@@ -70,7 +70,6 @@ public class InjectScopeOrQualifierAnnotationRetention extends DescribingMatcher
             JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Retention.class);
         if (retention != null) {
           return (!retention.value().equals(RUNTIME));
-
         }
         return true;//Default retention is CLASS, not RUNTIME, so return true if retention == null
       }

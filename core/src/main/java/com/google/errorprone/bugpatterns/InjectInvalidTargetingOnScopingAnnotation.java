@@ -56,14 +56,20 @@ public class InjectInvalidTargetingOnScopingAnnotation extends DescribingMatcher
    * Matches classes that are annotated with @Scope or @ScopeAnnotation.
    */
   @SuppressWarnings("unchecked")
-  private static final Matcher<ClassTree> SCOPE_ANNOTATION_MATCHER = Matchers.<ClassTree>anyOf(
-      hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
+  private static final Matcher<ClassTree> SCOPE_ANNOTATION_MATCHER = new Matcher<ClassTree>() {
+    @Override
+    public boolean matches(ClassTree classTree, VisitorState visitorState) {
+      return (ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0 && Matchers.<
+          ClassTree>anyOf(
+          hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION))
+          .matches(classTree, visitorState);
+    }
+  };
 
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(ClassTree classTree, VisitorState state) {
-    if ((ASTHelpers.getSymbol(classTree).flags() & Flags.ANNOTATION) != 0
-        && SCOPE_ANNOTATION_MATCHER.matches(classTree, state)) {
+    if (SCOPE_ANNOTATION_MATCHER.matches(classTree, state)) {
       Target target = JavacElements.getAnnotation(ASTHelpers.getSymbol(classTree), Target.class);
       boolean hasExclusivelyTypeAndOrMethodTargeting = false;
       if (target != null) {

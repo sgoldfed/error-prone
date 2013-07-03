@@ -16,16 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
  */
+@RunWith(JUnit4.class)
 public class InvalidNumericEqualityTest {
 
   private CompilationTestHelper compilationHelper;
@@ -38,13 +41,13 @@ public class InvalidNumericEqualityTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("InvalidNumericEqualityPositiveCases.java").toURI()));
+        fileFromResource(getClass(), "InvalidNumericEqualityPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("InvalidNumericEqualityNegativeCases.java").toURI()));
+        fileFromResource(getClass(), "InvalidNumericEqualityNegativeCases.java"));
   }
 
 }

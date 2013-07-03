@@ -16,6 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An abstract class for matchers that applies a single matcher across multiple tree nodes.
  * Configurable to return true if any of or all of the tree nodes match.  In the any of case,
@@ -49,9 +52,9 @@ public abstract class MultiMatcher<T, N> implements Matcher<T> {
   final Matcher<N> nodeMatcher;
 
   /**
-   * The matching node.  Only set when MatchType is ANY.
+   * The matching node. Only set when MatchType is ANY.
    */
-  N matchingNode;
+  List<N> matchingNodes = new ArrayList<N>(); 
 
   public MultiMatcher(MatchType matchType, Matcher<N> nodeMatcher) {
     this.nodeMatcher = nodeMatcher;
@@ -61,13 +64,27 @@ public abstract class MultiMatcher<T, N> implements Matcher<T> {
   /**
    * Returns the node that matched.  Node will be non-null.
    */
-  public N getMatchingNode() {
+  public List<N> getMatchingNodes() {
     if (matchType == MatchType.ALL) {
       throw new IllegalStateException("getMatchingNode() makes no sense when matching all nodes");
     }
-    if (matchingNode == null) {
+    if (matchingNodes == null) {
       throw new IllegalStateException("No nodes matched");
     }
-    return matchingNode;
+    return matchingNodes;
+  }
+  
+  /**
+   * If matchType is ANY, returns the last found matching node
+   */
+  public N getLastMatchingNode() {
+    if (matchType == MatchType.ALL) {
+      throw new IllegalStateException("getMatchingNode() makes no sense when matching all nodes");
+    }
+    if (matchingNodes == null) {
+      throw new IllegalStateException("No nodes matched");
+    }
+    System.err.println(matchingNodes.size());
+    return matchingNodes.get(matchingNodes.size()-1);
   }
 }

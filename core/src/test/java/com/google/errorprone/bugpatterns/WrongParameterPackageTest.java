@@ -16,16 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
  */
+@RunWith(JUnit4.class)
 public class WrongParameterPackageTest {
 
   private CompilationTestHelper compilationHelper;
@@ -38,13 +41,13 @@ public class WrongParameterPackageTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("WrongParameterPackagePositiveCases.java").toURI()));
+        fileFromResource(getClass(), "WrongParameterPackagePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("WrongParameterPackageNegativeCases.java").toURI()));
+        fileFromResource(getClass(), "WrongParameterPackageNegativeCases.java"));
   }
 
 }

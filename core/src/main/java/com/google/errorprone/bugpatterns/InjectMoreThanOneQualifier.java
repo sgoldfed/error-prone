@@ -43,7 +43,6 @@ import java.util.List;
     severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectMoreThanOneQualifier extends DescribingMatcher<AnnotationTree> {
 
-
   private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
   private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
 

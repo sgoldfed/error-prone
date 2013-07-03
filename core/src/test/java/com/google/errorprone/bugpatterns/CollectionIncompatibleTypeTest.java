@@ -16,17 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.CollectionIncompatibleType;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
+@RunWith(JUnit4.class)
 public class CollectionIncompatibleTypeTest {
 
   private CompilationTestHelper compilationHelper;
@@ -39,15 +41,13 @@ public class CollectionIncompatibleTypeTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "CollectionIncompatibleTypePositiveCases.java").toURI()));
+        fileFromResource(getClass(), "CollectionIncompatibleTypePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource(
-            "CollectionIncompatibleTypeNegativeCases.java").toURI()));
+        fileFromResource(getClass(), "CollectionIncompatibleTypeNegativeCases.java"));
   }
 
 }

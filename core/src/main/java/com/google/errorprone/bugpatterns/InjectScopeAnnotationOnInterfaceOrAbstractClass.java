@@ -71,9 +71,10 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClass
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    Tree modified = getCurrentlyAnnotatedNode(state);
-    return (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state) && modified instanceof ClassTree
-        && INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches((ClassTree) modified, state));
+    Tree annotatedNode = getCurrentlyAnnotatedNode(state);
+    return (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)
+        && annotatedNode instanceof ClassTree
+        && INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches((ClassTree) annotatedNode, state));
   }
 
   @Override

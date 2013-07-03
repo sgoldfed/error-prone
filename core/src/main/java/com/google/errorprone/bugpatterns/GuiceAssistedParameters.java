@@ -48,7 +48,7 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
 
   private static final String ASSISTED_ANNOTATION = "com.google.inject.assistedinject.Assisted";
 
-  private Matcher<VariableTree> constructorAssistedParameterMatcher = new Matcher<VariableTree>() {
+  private Matcher<VariableTree> ASSISTED_CONSTRUCTOR_MATCHER = new Matcher<VariableTree>() {
     @Override
     public boolean matches(VariableTree t, VisitorState state) {
       Symbol modified = ASTHelpers.getSymbol(state.getPath().getParentPath().getLeaf());
@@ -60,7 +60,7 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(VariableTree variableTree, VisitorState state) {
-    if (constructorAssistedParameterMatcher.matches(variableTree, state)) {
+    if (ASSISTED_CONSTRUCTOR_MATCHER.matches(variableTree, state)) {
       Compound thisParamsAssisted = null;
       for (Compound c : ASTHelpers.getSymbol(variableTree).getAnnotationMirrors()) {
         if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
@@ -84,12 +84,12 @@ public class GuiceAssistedParameters extends DescribingMatcher<VariableTree> {
           if (otherParamsAssisted != null) {
             if (thisParamsAssisted.getElementValues().isEmpty()
                 && otherParamsAssisted.getElementValues().isEmpty()) {
-              //both have unnamed @Assisted annotations
+              // both have unnamed @Assisted annotations
               numIdentical++;
             }
-            //if value is specified, check that they are equal
-            //also, there can only be one value which is why I didn't check for equality
-            //in both directions
+            // if value is specified, check that they are equal
+            // also, there can only be one value which is why I didn't check for equality
+            // in both directions
             for (MethodSymbol m : thisParamsAssisted.getElementValues().keySet())
               if (otherParamsAssisted.getElementValues().get(m).getValue()
                   .equals(thisParamsAssisted.getElementValues().get(m).getValue())) {

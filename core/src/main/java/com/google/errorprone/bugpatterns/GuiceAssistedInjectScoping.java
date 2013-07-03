@@ -99,7 +99,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
         // Check constructor with @Inject annotation for parameter with @Assisted annotation.
         return methodHasParameters(ANY,
             Matchers.<VariableTree>hasAnnotation(ASSISTED_ANNOTATION))
-            .matches(constructorWithInjectMatcher.getMatchingNode(), state);
+            .matches(constructorWithInjectMatcher.getLastMatchingNode(), state);
       }
 
       return constructor(ANY, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION))
@@ -116,7 +116,7 @@ public class GuiceAssistedInjectScoping extends DescribingMatcher<ClassTree> {
 
   @Override
   public Description describe(ClassTree classTree, VisitorState state) {
-    AnnotationTree annotationWithScopeAnnotation = classAnnotationMatcher.getMatchingNode();
+    AnnotationTree annotationWithScopeAnnotation = classAnnotationMatcher.getLastMatchingNode();
     if (annotationWithScopeAnnotation == null) {
       throw new IllegalStateException("Expected to find an annotation that was annotated " +
           "with @ScopeAnnotation");
