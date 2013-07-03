@@ -1,17 +1,15 @@
 /*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.google.errorprone.bugpatterns;
@@ -41,8 +39,8 @@ import com.sun.source.tree.ModifiersTree;
  */
 
 @BugPattern(name = "InjectMoreThanOneScopeAnnotationOnClass",
-    summary = "A class can be annotated with at most one scope annotation", 
-    explanation = "Annotating a class with more than one scope annotation is "
+    summary = "A class can be annotated with at most one scope annotation", explanation =
+        "Annotating a class with more than one scope annotation is "
         + "invalid according to the JSR-330 specification. ", category = INJECT, severity = ERROR,
     maturity = EXPERIMENTAL)
 public class InjectMoreThanOneScopeAnnotationOnClass extends DescribingMatcher<AnnotationTree> {
@@ -55,19 +53,20 @@ public class InjectMoreThanOneScopeAnnotationOnClass extends DescribingMatcher<A
    * @Scope(Javax).
    */
   @SuppressWarnings("unchecked")
-  private Matcher<AnnotationTree> scopeAnnotationMatcher = Matchers.<AnnotationTree>anyOf(
-      hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
+  private static final Matcher<AnnotationTree> SCOPE_ANNOTATION_MATCHER =
+      Matchers.<AnnotationTree>anyOf(
+          hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
     int numberOfScopeAnnotations = 0;
     // check if this annotation is on a class and is a scope annotation
-    if (scopeAnnotationMatcher.matches(annotationTree, state)
+    if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)
         && state.getPath().getParentPath().getParentPath().getLeaf() instanceof ClassTree) {
       for (AnnotationTree annotation :
           ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getAnnotations()) {
-        if (scopeAnnotationMatcher.matches(annotation, state)) {
+        if (SCOPE_ANNOTATION_MATCHER.matches(annotation, state)) {
           numberOfScopeAnnotations++;
         }
       }
@@ -80,7 +79,6 @@ public class InjectMoreThanOneScopeAnnotationOnClass extends DescribingMatcher<A
     return new Description(
         annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
   }
-
 
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<AnnotationTree> annotationMatcher =

@@ -16,17 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class PreconditionsCheckNotNullTest {
 
   private CompilationTestHelper compilationHelper;
@@ -39,37 +41,31 @@ public class PreconditionsCheckNotNullTest {
   @Test
   public void testPositiveCase1() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullPositiveCase1.java").toURI()));
+        fileFromResource(getClass(), "PreconditionsCheckNotNullPositiveCase1.java"));
   }
 
   @Test
   public void testPositiveCase2() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullPositiveCase2.java").toURI()));
+        fileFromResource(getClass(), "PreconditionsCheckNotNullPositiveCase2.java"));
   }
 
   @Test
   public void testPositiveCase3() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullPositiveCase3.java").toURI()));
+        fileFromResource(getClass(), "PreconditionsCheckNotNullPositiveCase3.java"));
   }
-
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullNegativeCase1.java").toURI()));
+        fileFromResource(getClass(), "PreconditionsCheckNotNullNegativeCase1.java"));
   }
 
   @Test
   public void testNegativeCase2() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullNegativeCase2.java").toURI()));
+        fileFromResource(getClass(), "PreconditionsCheckNotNullNegativeCase2.java"));
   }
 
 }

@@ -1,3 +1,17 @@
+/*
+ * Copyright 2013 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.Category.INJECT;
@@ -28,8 +42,7 @@ import com.sun.tools.javac.code.Symbol;
  */
 @BugPattern(name = "InjectAssistedInjectAndInjectOnConstructors",
     summary = "@AssistedInject and @Inject cannot be used on constructors in the same class.",
-    explanation = 
-    "http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html",
+    explanation = "http://google-guice.googlecode.com/git/javadoc/com/google/inject/assistedinject/AssistedInject.html",
     category = INJECT, severity = ERROR, maturity = EXPERIMENTAL)
 public class InjectAssistedInjectAndInjectOnConstructors extends DescribingMatcher<AnnotationTree> {
 
@@ -42,7 +55,7 @@ public class InjectAssistedInjectAndInjectOnConstructors extends DescribingMatch
    * Matches if any constructor of a class is annotated with an @Inject annotation.
    */
   @SuppressWarnings("unchecked")
-  private MultiMatcher<ClassTree, MethodTree> constructorWithInjectMatcher = constructor(
+  private MultiMatcher<ClassTree, MethodTree> INJECTABLE_CONSTRUCTOR_MATCHER = constructor(
       ANY, Matchers.<MethodTree>anyOf(
           hasAnnotation(GUICE_INJECT_ANNOTATION), hasAnnotation(JAVAX_INJECT_ANNOTATION)));
 
@@ -50,7 +63,7 @@ public class InjectAssistedInjectAndInjectOnConstructors extends DescribingMatch
    * Matches if any constructor of a class is annotated with an @AssistedInject annotation.
    */
   @SuppressWarnings("unchecked")
-  private MultiMatcher<ClassTree, MethodTree> constructorWithAssistedInjectMatcher =
+  private static MultiMatcher<ClassTree, MethodTree> CONSTRUCTOR_WITH_ASSISTED_INJECT_MATCHER =
       constructor(ANY, Matchers.<MethodTree>hasAnnotation(ASSISTED_INJECT_ANNOTATION));
 
   /**
@@ -58,8 +71,9 @@ public class InjectAssistedInjectAndInjectOnConstructors extends DescribingMatch
    * with @AssistedInject.
    */
   @SuppressWarnings("unchecked")
-  private Matcher<ClassTree> constructorsWithInjectAndAssistedInjectMatcher =
-      Matchers.<ClassTree>allOf(constructorWithInjectMatcher, constructorWithAssistedInjectMatcher);
+  private Matcher<ClassTree> CONSTRUCTOR_WITH_INJECT_AND_ASSISTED_INJECT_MATCHER =
+      Matchers.<ClassTree>allOf(
+          INJECTABLE_CONSTRUCTOR_MATCHER, CONSTRUCTOR_WITH_ASSISTED_INJECT_MATCHER);
 
   @Override
   @SuppressWarnings("unchecked")
@@ -72,7 +86,7 @@ public class InjectAssistedInjectAndInjectOnConstructors extends DescribingMatch
           || annotationSymbol.equals(state.getSymbolFromString(ASSISTED_INJECT_ANNOTATION))) {
         ClassTree enclosingClass =
             (ClassTree) state.getPath().getParentPath().getParentPath().getParentPath().getLeaf();
-        return constructorsWithInjectAndAssistedInjectMatcher.matches(enclosingClass, state);
+        return CONSTRUCTOR_WITH_INJECT_AND_ASSISTED_INJECT_MATCHER.matches(enclosingClass, state);
       }
     }
     return false;
@@ -83,7 +97,6 @@ public class InjectAssistedInjectAndInjectOnConstructors extends DescribingMatch
     return new Description(
         annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
   }
-
 
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<AnnotationTree> annotationMatcher =

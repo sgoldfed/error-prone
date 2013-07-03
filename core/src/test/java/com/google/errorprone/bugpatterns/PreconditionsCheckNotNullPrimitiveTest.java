@@ -16,36 +16,37 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class PreconditionsCheckNotNullPrimitiveTest {
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new PreconditionsCheckNotNullPrimitive.Scanner());
+    compilationHelper = 
+        new CompilationTestHelper(new PreconditionsCheckNotNullPrimitive.Scanner());
   }
 
   @Test
   public void testPositiveCases() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullPrimitivePositiveCases.java").toURI()));
+        fileFromResource(getClass(), "PreconditionsCheckNotNullPrimitivePositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase1() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource(
-            "PreconditionsCheckNotNullPrimitiveNegativeCases.java").toURI()));
+        fileFromResource(getClass(), "PreconditionsCheckNotNullPrimitiveNegativeCases.java"));
   }
 }

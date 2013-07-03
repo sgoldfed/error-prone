@@ -16,17 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.InvalidStringEquality;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author ptoomey@google.com (Patrick Toomey)
  */
+@RunWith(JUnit4.class)
 public class InvalidStringEqualityTest {
 
   private CompilationTestHelper compilationHelper;
@@ -39,13 +41,13 @@ public class InvalidStringEqualityTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("InvalidStringEqualityPositiveCases.java").toURI()));
+        fileFromResource(getClass(), "InvalidStringEqualityPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("InvalidStringEqualityNegativeCases.java").toURI()));
+        fileFromResource(getClass(), "InvalidStringEqualityNegativeCases.java"));
   }
 
 }

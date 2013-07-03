@@ -16,20 +16,22 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Test cases for {@link LongLiteralLowerCaseSuffix}.
  *
  * @author Simon Nickerson (sjnickerson@google.com)
  */
+@RunWith(JUnit4.class)
 public class LongLiteralLowerCaseSuffixTest {
 
   private CompilationTestHelper compilationHelper;
@@ -42,8 +44,7 @@ public class LongLiteralLowerCaseSuffixTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase1.java").toURI()));
+        fileFromResource(getClass(), "LongLiteralLowerCaseSuffixPositiveCase1.java"));
   }
 
   /**
@@ -55,14 +56,12 @@ public class LongLiteralLowerCaseSuffixTest {
     assumeTrue(Integer.parseInt(javaVersion[1]) >= 7);
 
     compilationHelper.assertCompileFailsWithMessages(
-        new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixPositiveCase2.java").toURI()));
+        fileFromResource(getClass(), "LongLiteralLowerCaseSuffixPositiveCase2.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(
-            this.getClass().getResource("LongLiteralLowerCaseSuffixNegativeCases.java").toURI()));
+        fileFromResource(getClass(), "LongLiteralLowerCaseSuffixNegativeCases.java"));
   }
 }
