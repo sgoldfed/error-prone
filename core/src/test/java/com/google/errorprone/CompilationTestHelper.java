@@ -67,5 +67,8 @@ public class CompilationTestHelper {
     }
     return result;
   }
-
+  
+  public static File fileFromResource(Class<?> loadingClass, String resourceName) throws URISyntaxException{
+    return new File(loadingClass.getResource(resourceName).toURI());
+  }
 }

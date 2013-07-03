@@ -16,16 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class GuiceAssistedInjectScopingTest {
 
   private CompilationTestHelper compilationHelper;
@@ -38,15 +41,12 @@ public class GuiceAssistedInjectScopingTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("GuiceAssistedInjectScopingPositiveCases.java")
-            .toURI()));
+        fileFromResource(getClass(), "GuiceAssistedInjectScopingPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("GuiceAssistedInjectScopingNegativeCases.java")
-            .toURI()));
+        fileFromResource(getClass(), "GuiceAssistedInjectScopingNegativeCases.java"));
   }
-
 }

@@ -16,17 +16,19 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.CompilationTestHelper.fileFromResource;
+
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.ArrayEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RunWith(JUnit4.class)
 public class ArrayEqualsTest {
 
   private CompilationTestHelper compilationHelper;
@@ -39,13 +41,12 @@ public class ArrayEqualsTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(
-        new File(this.getClass().getResource("ArrayEqualsPositiveCases.java").toURI()));
+        fileFromResource(getClass(), "ArrayEqualsPositiveCases.java"));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(
-        new File(this.getClass().getResource("ArrayEqualsNegativeCases.java").toURI()));
+        fileFromResource(getClass(), "ArrayEqualsNegativeCases.java"));
   }
-
 }
