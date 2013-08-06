@@ -71,8 +71,8 @@ public class InjectMoreThanOneQualifier extends DescribingMatcher<AnnotationTree
 
   @Override
   public Description describe(AnnotationTree annotation, VisitorState state) {
-    return new Description(
-        annotation, getDiagnosticMessage(), new SuggestedFix().delete(annotation));
+    return new Description(annotation, getDiagnosticMessage(),
+        new SuggestedFix().prefixWith(annotation, "/* ").postfixWith(annotation, " */ "));
   }
 
   public static class Scanner extends com.google.errorprone.Scanner {
