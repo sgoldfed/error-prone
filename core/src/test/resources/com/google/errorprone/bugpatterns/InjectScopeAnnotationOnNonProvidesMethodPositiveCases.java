@@ -24,7 +24,7 @@ import javax.inject.Scope;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectMisuseOfScopingAnnotationPositiveCases {
+public class InjectScopeAnnotationOnNonProvidesMethodPositiveCases {
 
   /**
    * Class has a javax scoping annotation on a field.

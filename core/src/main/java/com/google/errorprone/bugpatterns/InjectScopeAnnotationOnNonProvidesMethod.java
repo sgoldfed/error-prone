@@ -39,12 +39,12 @@ import com.sun.source.tree.Tree;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectMisuseOfScopingAnnotation",
+@BugPattern(name = "InjectScopeAnnotationOnNonProvidesMethod",
     summary = "Scoping annotations are only allowed on @Provides methods or class", explanation =
         "Scoping annotations are only allowed on @Provides methods or classes. Perhaps you "
         + "meant to use a  @Qualifier annotation. ", category = INJECT, severity = ERROR,
     maturity = EXPERIMENTAL)
-public class InjectMisuseOfScopingAnnotation extends DescribingMatcher<AnnotationTree> {
+public class InjectScopeAnnotationOnNonProvidesMethod extends DescribingMatcher<AnnotationTree> {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
@@ -88,7 +88,7 @@ public class InjectMisuseOfScopingAnnotation extends DescribingMatcher<Annotatio
 
   public static class Scanner extends com.google.errorprone.Scanner {
     public DescribingMatcher<AnnotationTree> annotationMatcher =
-        new InjectMisuseOfScopingAnnotation();
+        new InjectScopeAnnotationOnNonProvidesMethod();
 
     @Override
     public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {

@@ -22,7 +22,7 @@ import com.google.inject.Singleton;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class InjectMisuseOfScopingAnnotationNegativeCases {
+public class InjectScopeAnnotationOnNonProvidesMethodNegativeCases {
 
   /**
    * Class has no scoping annotation.
