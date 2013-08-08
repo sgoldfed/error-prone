@@ -41,12 +41,12 @@ public class InjectScopeAnnotationOnNonProvidesMethodTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(new File(
-        this.getClass().getResource("InjectScopeAnnotationOnNonProvidesMethod.java").toURI()));
+        this.getClass().getResource("InjectScopeAnnotationOnNonProvidesMethodPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(new File(
-        this.getClass().getResource("InjectScopeAnnotationOnNonProvidesMethod.java").toURI()));
+        this.getClass().getResource("InjectScopeAnnotationOnNonProvidesMethodNegativeCases.java").toURI()));
   }
 }

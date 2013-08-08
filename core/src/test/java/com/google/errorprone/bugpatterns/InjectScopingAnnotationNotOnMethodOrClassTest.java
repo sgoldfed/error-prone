@@ -41,12 +41,12 @@ public class InjectScopingAnnotationNotOnMethodOrClassTest {
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(new File(
-        this.getClass().getResource("InjectScopingAnnotationNotOnMethodOrClassTest.java").toURI()));
+        this.getClass().getResource("InjectScopingAnnotationNotOnMethodOrClassPositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(new File(
-        this.getClass().getResource("InjectScopingAnnotationNotOnMethodOrClassTest.java").toURI()));
+        this.getClass().getResource("InjectScopingAnnotationNotOnMethodOrClassNegativeCases.java").toURI()));
   }
 }
