@@ -46,6 +46,9 @@ public class InjectScopingAnnotationNotOnMethodOrClass extends DescribingMatcher
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
+  private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
+  private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
+
 
   /**
    * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice) or
@@ -56,10 +59,16 @@ public class InjectScopingAnnotationNotOnMethodOrClass extends DescribingMatcher
       Matchers.<AnnotationTree>anyOf(
           hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
+  @SuppressWarnings("unchecked")
+  private static final Matcher<AnnotationTree> QUALIFIER_ANNOTATION_MATCHER =
+      Matchers.<AnnotationTree>anyOf(
+          hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFER_ANNOTATION));
+
   @Override
   @SuppressWarnings("unchecked")
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)) {
+    if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)
+        && !QUALIFIER_ANNOTATION_MATCHER.matches(annotationTree, state)) { // discussed with sameb@
       Tree modified = state.getPath().getParentPath().getParentPath().getLeaf();
       if (!modified.getKind().equals(METHOD) && !(modified instanceof ClassTree)) {
           //code written without usng Tree.Kind since in java6 interface is a Kind.CLASS and in 
