@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.Category.INJECT;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
-import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.errorprone.BugPattern;
@@ -32,6 +31,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 
 /**
@@ -61,7 +61,10 @@ public class InjectScopingAnnotationNotOnMethodOrClass extends DescribingMatcher
   public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
     if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)) {
       Tree modified = state.getPath().getParentPath().getParentPath().getLeaf();
-      if (!modified.getKind().equals(CLASS) && !modified.getKind().equals(METHOD)) {
+      if (!modified.getKind().equals(METHOD) && !(modified instanceof ClassTree)) {
+          //code written without usng Tree.Kind since in java6 interface is a Kind.CLASS and in 
+          //java 7, it's a Kind.INTERFACE and we want it to be compatible with both
+          //interface will be a separate error. 
         return true;
       }
     }
