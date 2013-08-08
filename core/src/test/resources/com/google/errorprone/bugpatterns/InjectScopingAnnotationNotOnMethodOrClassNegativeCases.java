@@ -19,6 +19,9 @@ package com.google.errorprone.bugpatterns;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
+import javax.inject.Qualifier;
+import javax.inject.Scope;
+
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
@@ -45,4 +48,17 @@ public class InjectScopingAnnotationNotOnMethodOrClassNegativeCases {
       return "";
     }
   }
+  
+  /**
+   * field has scoping annotation, but it's also a qualifier
+   */
+  public class TestClass4 {
+    @ScopeAndQualifier
+    int field;
+  }
+  
+  @Scope
+  @Qualifier
+  @interface ScopeAndQualifier {}
+  
 }
