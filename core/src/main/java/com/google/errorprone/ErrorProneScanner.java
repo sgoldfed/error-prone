@@ -78,10 +78,6 @@ public class ErrorProneScanner extends Scanner {
       PreconditionsTooManyArgs.class,
       CheckReturnValue.class,
       DeadException.class,
-      InjectAssistedInjectAndInjectOnConstructors.class,
-      InjectMoreThanOneQualifier.class,
-      InjectMoreThanOneScopeAnnotationOnClass.class,
-      InjectScopeAnnotationOnInterfaceOrAbstractClass.class,
       FallThroughSuppression.class,
       SuppressWarningsDeprecated.class,
       EmptyIfStatement.class,
@@ -93,15 +89,12 @@ public class ErrorProneScanner extends Scanner {
       ArrayToStringConcatenation.class,
       ComparisonOutOfRange.class,
       SelfAssignment.class,
-      GuiceAssistedParameters.class,
       CovariantEquals.class,
       JUnit4TestNotRun.class,
       WrongParameterPackage.class,
       LongLiteralLowerCaseSuffix.class,
       UnneededConditionalOperator.class,
       ArrayToStringCompoundAssignment.class,
-      InjectScopeOrQualifierAnnotationRetention.class,
-      InjectInvalidTargetingOnScopingAnnotation.class,
       GuiceAssistedInjectScoping.class
   );
 
