@@ -59,4 +59,15 @@ public class InjectInvalidTargetingOnScopingAnnotationNegativeCases {
   @Target(PARAMETER)
   public @interface TestAnnotation4 {
   }
+  
+  /**
+   * A scoping annotation with taeget TYPE, METHOD, and (illegal) PARAMETER.
+   * Error is suppressed.
+   */
+  @SuppressWarnings("InvalidTargetingOnScopingAnnotation")
+  @Target({TYPE, METHOD, PARAMETER})
+  @Scope 
+  public @interface TestAnnotation5 {
+  }
+  
 }

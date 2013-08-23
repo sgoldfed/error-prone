@@ -76,4 +76,15 @@ public class InjectScopeOrQualifierAnnotationRetentionNegativeCases {
   @Retention(SOURCE)
   public @interface TestAnnotation5 {
   }
+  
+  /**
+   * A qualifer(@Qualifier) annotation with SOURCE retention. The error is suppressed.
+   */
+  @SuppressWarnings("ScopeOrQualifierAnnotationRetention")
+  @Qualifier
+  @Target({TYPE, METHOD})
+  @Retention(SOURCE)
+  public @interface TestAnnotation6 {
+  }
+
 }

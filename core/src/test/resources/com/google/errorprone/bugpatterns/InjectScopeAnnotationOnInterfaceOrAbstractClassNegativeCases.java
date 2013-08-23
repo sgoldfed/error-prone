@@ -49,4 +49,20 @@ public class InjectScopeAnnotationOnInterfaceOrAbstractClassNegativeCases {
   @Singleton
   public class TestClass4 {
   }
+  
+  /**
+   * An abstract class that has scoping annotation. The error is suppressed.
+   */
+  @SuppressWarnings("ScopeAnnotationOnInterfaceOrAbstractClass")
+  @Singleton
+  public abstract class TestClass5 {
+  }
+
+  /**
+   * An interface interface has scoping annotation. The error is suppressed.
+   */
+  @SuppressWarnings("ScopeAnnotationOnInterfaceOrAbstractClass")
+  @Singleton
+  public interface TestClass6 {
+  }
 }

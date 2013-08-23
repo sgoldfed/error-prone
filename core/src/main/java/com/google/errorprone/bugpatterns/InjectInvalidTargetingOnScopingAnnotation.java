@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectInvalidTargetingOnScopingAnnotation",
+@BugPattern(name = "InvalidTargetingOnScopingAnnotation",
     summary = "The target of a scoping annotation must be set to METHOD and/or TYPE.",
     explanation = "Scoping annotations are only appropriate for provision and therefore are only " +
     		"appropriate on @Provides methods and classes that will be provided just-in-time.",

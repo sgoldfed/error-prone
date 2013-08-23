@@ -39,7 +39,7 @@ import com.sun.source.tree.ModifiersTree;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 
-@BugPattern(name = "InjectMoreThanOneScopeAnnotationOnClass",
+@BugPattern(name = "MoreThanOneScopeAnnotationOnClass",
     summary = "A class can be annotated with at most one scope annotation", 
     explanation = "Annotating a class with more than one scope annotation is "
         + "invalid according to the JSR-330 specification. ", category = INJECT, severity = ERROR,
