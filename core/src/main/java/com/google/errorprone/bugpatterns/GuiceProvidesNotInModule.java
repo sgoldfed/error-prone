@@ -27,6 +27,7 @@ import com.google.errorprone.matchers.AnnotationType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.IsCastableTo;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -54,7 +55,8 @@ public class GuiceProvidesNotInModule extends BugChecker
   
   @SuppressWarnings("unchecked")
   private static final Matcher<ClassTree> GUICE_MODULE_MATCHER =
-      new IsCastableTo<ClassTree>(GUICE_MODULE);
+      //Matchers.isCastableTo(GUICE_MODULE);
+      Matchers.isCastableTo("java.util.Map");
 
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
