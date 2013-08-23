@@ -28,24 +28,24 @@ import java.io.File;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @RunWith(JUnit4.class)
-public class DaggerProvidesNotInModuleTest {
+public class GuiceProvidesNotInModuleTest {
 
   private CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(DaggerProvidesNotInModule.class);
+    compilationHelper = new CompilationTestHelper(GuiceProvidesNotInModule.class);
   }
 
   @Test
   public void testPositiveCase() throws Exception {
     compilationHelper.assertCompileFailsWithMessages(new File(
-        this.getClass().getResource("DaggerProvidesNotInModulePositiveCases.java").toURI()));
+        this.getClass().getResource("GuiceProvidesNotInModulePositiveCases.java").toURI()));
   }
 
   @Test
   public void testNegativeCase() throws Exception {
     compilationHelper.assertCompileSucceeds(new File(
-        this.getClass().getResource("DaggerProvidesNotInModuleNegativeCases.java").toURI()));
+        this.getClass().getResource("GuiceProvidesNotInModuleNegativeCases.java").toURI()));
   }
 }

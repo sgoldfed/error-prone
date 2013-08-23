@@ -15,7 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.Category.DAGGER;
+import static com.google.errorprone.BugPattern.Category.GUICE;
 import static com.google.errorprone.BugPattern.MaturityLevel.EXPERIMENTAL;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
@@ -25,14 +25,11 @@ import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.AnnotationType;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.IsCastableTo;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
-import com.sun.tools.javac.code.Attribute.Compound;
-
-import javax.lang.model.element.TypeElement;
 
 /**
  * Matches @dagger.Provides annotations used outside of Dagger Modules.
@@ -40,33 +37,31 @@ import javax.lang.model.element.TypeElement;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 
-@BugPattern(name = "DaggerProvidesNotInModule",
+@BugPattern(name = "GuiceProvidesNotInModule",
     summary = "Dagger @Provides methods must be declared in Dagger Modules",
-    explanation = "@dagger.Provides will only be regisered by Dagger if it is used on methods "
-        + "inside of Dagger Modules. Modules are classes annotated with @dagger.Module",
-        category = DAGGER, severity = ERROR, maturity = EXPERIMENTAL)
-public class DaggerProvidesNotInModule extends BugChecker
+    explanation = "@com.google.inject.Provides will only be regisered by Guice/Gin if it is "
+        + "used on methods inside of Guice/Gin Modules. ",
+        category = GUICE, severity = ERROR, maturity = EXPERIMENTAL)
+public class GuiceProvidesNotInModule extends BugChecker
     implements AnnotationTreeMatcher {
 
-  private static final String DAGGER_PROVIDES_ANNOTATION = "dagger.Provides";
-  private static final String DAGGER_MODULE_ANNOTATION = "dagger.Module";
+  private static final String GUICE_PROVIDES_ANNOTATION = "com.google.inject.Provides";
+  private static final String GUICE_MODULE = "com.google.inject.Module";
 
   @SuppressWarnings("unchecked")
   private static final Matcher<AnnotationTree> PROVIDES_ANNOTATION_MATCHER =
-      new AnnotationType(DAGGER_PROVIDES_ANNOTATION);
+      new AnnotationType(GUICE_PROVIDES_ANNOTATION);
+  
+  @SuppressWarnings("unchecked")
+  private static final Matcher<ClassTree> GUICE_MODULE_MATCHER =
+      new IsCastableTo<ClassTree>(GUICE_MODULE);
 
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (!PROVIDES_ANNOTATION_MATCHER.matches(annotationTree, state)) {
       return Description.NO_MATCH;
     }
-    boolean isModule = false;
-    for (Compound c : ASTHelpers.getSymbol(getEnclosingClass(state)).getAnnotationMirrors()) {
-      if (((TypeElement) c.getAnnotationType().asElement()).getQualifiedName()
-          .contentEquals(DAGGER_MODULE_ANNOTATION)) {
-        isModule = true;
-      }
-    }
+    boolean isModule = GUICE_MODULE_MATCHER.matches(getEnclosingClass(state), state);
     return isModule ? Description.NO_MATCH
         : describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
   }

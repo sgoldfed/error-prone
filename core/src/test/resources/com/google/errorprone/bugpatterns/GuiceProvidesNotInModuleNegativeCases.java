@@ -15,18 +15,30 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import dagger.Provides;
+import dagger.Module;
+import com.google.inject.Provides;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class DaggerProvidesNotInModulePositiveCases {
+public class GuiceProvidesNotInModuleNegativeCases {
 
   /**
-   * @Provides method not in a dagger Module.
+   * @Provides method declared inside a dagger Module.
+   */
+  @Module
+  public class TestModule {
+    @Provides
+    String providesString() {
+      return "string";
+    }
+  }
+
+  /**
+   * @Provides method not in a dagger Module. Error is suppressed.
    */
   public class NotAModule {
-    //BUG: Suggestion includes "remove"
+    //@SuppressWarnings("GuiceProvidesNotInModule")
     @Provides
     String providesString() {
       return "string";

@@ -103,7 +103,7 @@ public class ErrorProneScanner extends Scanner {
       InjectScopeOrQualifierAnnotationRetention.class,
       InjectInvalidTargetingOnScopingAnnotation.class,
       GuiceAssistedInjectScoping.class,
-      DaggerProvidesNotInModule.class
+      GuiceProvidesNotInModule.class
   );
 
   @SuppressWarnings("unchecked")
