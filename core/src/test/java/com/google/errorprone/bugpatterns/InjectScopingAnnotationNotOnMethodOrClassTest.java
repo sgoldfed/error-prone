@@ -35,7 +35,7 @@ public class InjectScopingAnnotationNotOnMethodOrClassTest {
 
   @Before
   public void setUp() {
-    compilationHelper = new CompilationTestHelper(new InjectScopingAnnotationNotOnMethodOrClass.Scanner());
+    compilationHelper = new CompilationTestHelper(InjectScopingAnnotationNotOnMethodOrClass.class);
   }
 
   @Test

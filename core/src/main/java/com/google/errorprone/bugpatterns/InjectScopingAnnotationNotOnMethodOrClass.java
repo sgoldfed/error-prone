@@ -24,8 +24,8 @@ import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.DescribingMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -37,18 +37,17 @@ import com.sun.source.tree.Tree;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectScopingAnnotationNotOnMethodOrClass",
+@BugPattern(name = "ScopingAnnotationNotOnMethodOrClass",
     summary = "Scoping annotations are only allowed on methods or classes", explanation =
         "Scoping annotations are only allowed on @Provides methods or classes. Perhaps you "
         + "meant to use a  @Qualifier annotation. ", category = INJECT, severity = ERROR,
     maturity = EXPERIMENTAL)
-public class InjectScopingAnnotationNotOnMethodOrClass extends DescribingMatcher<AnnotationTree> {
+public class InjectScopingAnnotationNotOnMethodOrClass extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   private static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
   private static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
   private static final String JAVAX_QUALIFER_ANNOTATION = "javax.inject.Qualifier";
-
 
   /**
    * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice) or
@@ -66,7 +65,7 @@ public class InjectScopingAnnotationNotOnMethodOrClass extends DescribingMatcher
 
   @Override
   @SuppressWarnings("unchecked")
-  public final boolean matches(AnnotationTree annotationTree, VisitorState state) {
+  public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)
         && !QUALIFIER_ANNOTATION_MATCHER.matches(annotationTree, state)) { // discussed with sameb@
       Tree modified = state.getPath().getParentPath().getParentPath().getLeaf();
@@ -74,26 +73,9 @@ public class InjectScopingAnnotationNotOnMethodOrClass extends DescribingMatcher
           //code written without usng Tree.Kind since in java6 interface is a Kind.CLASS and in 
           //java 7, it's a Kind.INTERFACE and we want it to be compatible with both
           //interface will be a separate error. 
-        return true;
+        return describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
       }
     }
-    return false;
-  }
-
-  @Override
-  public Description describe(AnnotationTree annotationTree, VisitorState state) {
-    return new Description(
-        annotationTree, getDiagnosticMessage(), new SuggestedFix().delete(annotationTree));
-  }
-
-  public static class Scanner extends com.google.errorprone.Scanner {
-    public DescribingMatcher<AnnotationTree> annotationMatcher =
-        new InjectScopingAnnotationNotOnMethodOrClass();
-
-    @Override
-    public Void visitAnnotation(AnnotationTree annotationTree, VisitorState visitorState) {
-      evaluateMatch(annotationTree, visitorState, annotationMatcher);
-      return super.visitAnnotation(annotationTree, visitorState);
-    }
+    return Description.NO_MATCH;
   }
 }
