@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.inject.BindingAnnotation;
+
 import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
 
@@ -41,39 +42,73 @@ public class InjectMoreThanOneQualifierNegativeCases {
    * A class in which a single javax.inject.Qualifier annotation is on the class, on a constructor,
    * on a field, on a method, and on a method parameter.
    */
-  @Foo
+  @Foo1
   public class TestClass2 {
-    @Foo
+    @Foo1
     private int n;
 
-    @Foo
+    @Foo1
     public TestClass2() {}
 
-    @Foo
-    public void setN(@Foo int n) {}
+    @Foo1
+    public void setN(@Foo1 int n) {}
   }
 
   /**
    * A class in which a single com.google.inject.BindingAnnotation annotation is on the class, on a
    * constructor, on a field, on a method, and on a method parameter.
    */
-  @Bar
+  @Bar1
   public class TestClass3 {
-    @Bar
+    @Bar1
     private int n;
 
-    @Bar
+    @Bar1
     public TestClass3() {}
 
-    @Bar
-    public void setN(@Bar int n) {}
+    @Bar1
+    public void setN(@Bar1 int n) {}
   }
+  
+  /**
+   * A suppression test for a class in which the class, a constructor, a field, 
+   * a method, and a method parameter each have  two com.google.inject.BindingAnnotation
+   *  annotations
+   * 
+   * TODO(sgoldfeder) Change so that the error only shows up on elements where qualifiers are 
+   * allowed--i.e. methods and classes.
+   */
+  @SuppressWarnings("MoreThanOneQualifier")
+  @Foo1
+  @Foo2
+  public class TestClass4 {
+    @Foo1
+    @Foo2
+    private int n;
+
+    @Foo1
+    @Foo2
+    public TestClass4() {}
+
+    @Foo1
+    @Foo2
+    public void setN(@Foo1 @Foo2 int n) {}
+  }
+
 
   @Qualifier
   @Retention(RUNTIME)
-  public @interface Foo {}
+  public @interface Foo1 {}
+  
+  @Qualifier
+  @Retention(RUNTIME)
+  public @interface Foo2 {}
   
   @BindingAnnotation
   @Retention(RUNTIME)
-  public @interface Bar {}
+  public @interface Bar1 {}
+  
+  @BindingAnnotation
+  @Retention(RUNTIME)
+  public @interface Bar2 {}
 }

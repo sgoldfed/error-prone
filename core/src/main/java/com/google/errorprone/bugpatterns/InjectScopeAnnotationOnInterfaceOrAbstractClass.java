@@ -38,7 +38,7 @@ import com.sun.tools.javac.code.Flags;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
+@BugPattern(name = "ScopeAnnotationOnInterfaceOrAbstractClass",
     summary = "Scope annotation on an interface or abstact class is not allowed",
     explanation = "Scoping annotations are not allowed on abstract types.", category = INJECT,
     severity = ERROR, maturity = EXPERIMENTAL)

@@ -38,7 +38,7 @@ import java.lang.annotation.Retention;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-@BugPattern(name = "InjectScopeOrQualifierAnnotationRetention",
+@BugPattern(name = "ScopeOrQualifierAnnotationRetention",
     summary = "Scoping and qualifier annotations must have runtime retention.", explanation =
         "The JSR-330 spec allows use of reflection. Not having runtime "
         + "retention on scoping or qualifer annotations will cause unexpected "

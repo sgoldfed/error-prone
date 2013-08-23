@@ -27,10 +27,12 @@ import javax.inject.Qualifier;
  */
 public class InjectMoreThanOneQualifierPositiveCases {
 
-
   /**
    * A class in which the class, a constructor, a field, a method, and a method parameter each have
-   * two com.google.inject.BindingAnnotation annotations.
+   * two com.google.inject.BindingAnnotation annotations. 
+   * 
+   * TODO(sgoldfeder) Change so that the error only shows up on elements where qualifiers are 
+   * allowed--i.e. methods and classes.
    */
   //BUG: Suggestion includes "remove"
   @Foo1 

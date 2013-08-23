@@ -66,4 +66,14 @@ public class GuiceAssistedParametersNegativeCases {
     @Inject
     public TestClass5(@Assisted("foo") List<String> x, @Assisted("foo") List<Integer> y, String z) {}
   }
+  
+  /**
+   * Class has constructor with two @Assisted parameters of the same type.
+   * Error is suppressed.
+   */
+  public class TestClass6 {
+    @SuppressWarnings("GuiceAssistedParameters")
+    @Inject
+    public TestClass6(int n, @Assisted String x, @Assisted String y, int z) {}
+  }
 }

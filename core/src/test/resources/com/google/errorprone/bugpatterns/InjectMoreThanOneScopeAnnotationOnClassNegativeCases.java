@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.inject.Singleton;
 import com.google.inject.Provides;
+import com.google.inject.servlet.SessionScoped;
 /**
  * @author sgoldfeder@google.com(Steven Goldfeder)
  */
@@ -54,4 +55,12 @@ public class InjectMoreThanOneScopeAnnotationOnClassNegativeCases {
   @Singleton @Provides
   public void foo(){}
   }
+   
+   /**
+    * Class has two scoping annotations. The error is suppressed.
+    */
+   @SuppressWarnings("MoreThanOneScopeAnnotationOnClass")
+   @Singleton 
+   @SessionScoped
+   public class TestClass6 {}
 }
