@@ -15,7 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import dagger.Provides;
+import com.google.inject.Provides;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)

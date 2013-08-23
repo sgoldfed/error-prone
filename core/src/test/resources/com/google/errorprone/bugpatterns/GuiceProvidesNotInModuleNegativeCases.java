@@ -15,7 +15,9 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import dagger.Module;
+import com.google.inject.AbstractModule;
+import com.google.inject.Binder;
+import com.google.inject.Module;
 import com.google.inject.Provides;
 
 /**
@@ -23,25 +25,23 @@ import com.google.inject.Provides;
  */
 public class GuiceProvidesNotInModuleNegativeCases {
 
-  /**
-   * @Provides method declared inside a dagger Module.
-   */
-  @Module
-  public class TestModule {
+  class GuiceModule1 extends AbstractModule {
     @Provides
     String providesString() {
       return "string";
     }
+
+    @Override
+    protected void configure() {}
   }
 
-  /**
-   * @Provides method not in a dagger Module. Error is suppressed.
-   */
-  public class NotAModule {
-    //@SuppressWarnings("GuiceProvidesNotInModule")
+  class GuiceModule2 implements Module {
     @Provides
     String providesString() {
       return "string";
     }
+
+    @Override
+    public void configure(Binder binder) {}
   }
-}
+ }

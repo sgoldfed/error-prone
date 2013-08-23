@@ -51,12 +51,11 @@ public class GuiceProvidesNotInModule extends BugChecker
 
   @SuppressWarnings("unchecked")
   private static final Matcher<AnnotationTree> PROVIDES_ANNOTATION_MATCHER =
-      new AnnotationType(GUICE_PROVIDES_ANNOTATION);
+      Matchers.isType(GUICE_PROVIDES_ANNOTATION);
   
   @SuppressWarnings("unchecked")
   private static final Matcher<ClassTree> GUICE_MODULE_MATCHER =
-      //Matchers.isCastableTo(GUICE_MODULE);
-      Matchers.isCastableTo("java.util.Map");
+      Matchers.isCastableTo(GUICE_MODULE);
 
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
@@ -64,6 +63,8 @@ public class GuiceProvidesNotInModule extends BugChecker
       return Description.NO_MATCH;
     }
     boolean isModule = GUICE_MODULE_MATCHER.matches(getEnclosingClass(state), state);
+    System.out.println(getEnclosingClass(state));
+    System.out.println(isModule);
     return isModule ? Description.NO_MATCH
         : describeMatch(annotationTree, new SuggestedFix().delete(annotationTree));
   }
